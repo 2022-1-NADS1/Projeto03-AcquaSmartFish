@@ -1,0 +1,108 @@
+String INDEX_HTML  = R"=====(
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Alimentador de Peixes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@100&display=swap" rel="stylesheet">
+    <meta http-equiv="refresh" content="5" />
+    <style>
+        * {
+            font-family: 'Exo 2', sans-serif
+        }
+
+        body {
+            background-color: hsl(192, 54%, 38%);
+        }
+
+        .Screen-div {
+            margin: 200px auto;
+            width: 600;
+            background-color: rgb(255, 255, 255);
+            padding: 30px 60px 60px 60px;
+            border-radius: 44px;
+        }
+
+        .tittle {
+            text-align: center;
+            color: #505050;
+            font-weight: bolder;
+            font-size: 20px;
+        }
+
+        .Status-title {
+            text-align: center;
+            color: #505050;
+            font-weight: bolder;
+            font-size: 20px;
+        }
+
+        .Status {
+            text-align: center;
+            color: rgb(24, 168, 48);
+            font-weight: bolder;
+            font-size: 15px;
+            display: block;
+            border-radius: 15px;
+            border: 1px solid rgb(36, 160, 56);
+            ;
+            padding: 10px 100px;
+            margin: 15px auto 0;
+            width: fit-content;
+            position: relative;
+        }
+
+        .Status::after {
+            position: absolute;
+            content: "";
+            top: 47%;
+            right: -18.2%;
+            transform: translate(-50%, -50%);
+            width: 25px;
+            height: 25px;
+            border-color: rgb(36, 160, 56);
+            ;
+            border-radius: 50%;
+            background: rgb(36, 160, 56);
+            ;
+        }
+
+        .Status::before {
+            position: absolute;
+            content: "";
+            top: 47%;
+            right: -45px;
+            transform: translate(-50%, -50%);
+            width: 18px;
+            height: 18px;
+            border-color: #fff;
+            border-radius: 50%;
+            z-index: 1;
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="Screen-div">
+        <div class="logo" style="TEXT-ALIGN: CENTER;">
+            <img src="https://i.postimg.cc/8kRwzdf6/IMG-20220525-WA0005.png" alt="" style="width: 200PX; height: 200px;">
+        </div>
+        <div class="tittle">
+            <h1>Alimentador de Peixes</h1>
+        </div>
+        <div class="Status-title">Status do alimentador</div>
+        <div class="Status">
+)=====";
+String INDEX_HTMLfinal  = R"=====(
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+</body>
+
+</html>
+)=====";

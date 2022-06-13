@@ -1,0 +1,88 @@
+#include <HCSR04.h> //INCLUSÃO DA BIBLIOTECA DO SENSOR DE PROXIMIDADE
+#include "RTClib.h" //INCLUSÃO DA BIBLIOTECA DO MODÚLO DS3231 (RELÓGINHO)
+#include <Servo.h> // INCLUSÃO DA BIBLIOTECA DO SERVO MOTOR
+
+UltraSonicDistanceSensor distanceSensor(7, 6);  // Inicia o sensor usando as portas digitais 7(trigger) e 6(echo)
+
+byte estadomotor = 0; 
+
+RTC_DS3231 rtc; //OBJETO DO TIPO RTC_DS3231 (função da biblioteca do relógio)
+ 
+//DECLARAÇÃO DOS DIAS DA SEMANA
+char daysOfTheWeek[7][12] = {"Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
+
+Servo myservo; // Objeto [myservo] da biblioteca do Servo é criado
+               // OOPs Concept
+
+void Motor (byte estado) 
+{
+  estadomotor = estado;
+  myservo.write(estado); // Gira para 45º  
+}
+
+void setup()
+{
+  Serial.begin(115200);
+
+  if(! rtc.begin()) { // SE O RTC NÃO FOR INICIALIZADO, FAZ
+    Serial.println("DS3231 não encontrado"); //IMPRIME O TEXTO NO MONITOR SERIAL
+    while(1); //SEMPRE ENTRE NO LOOP
+  }
+  if(rtc.lostPower()){ //SE RTC FOI LIGADO PELA PRIMEIRA VEZ / FICOU SEM ENERGIA / ESGOTOU A BATERIA, FAZ
+    Serial.println("DS3231 OK!"); //IMPRIME O TEXTO NO MONITOR SERIAL
+    //REMOVA O COMENTÁRIO DE UMA DAS LINHAS ABAIXO PARA INSERIR AS INFORMAÇÕES ATUALIZADAS EM SEU RTC
+    //rtc.adjust(DateTime(F(_DATE), F(TIME_))); //CAPTURA A DATA E HORA EM QUE O SKETCH É COMPILADO
+    rtc.adjust(DateTime(2022, 5, 17, 21, 32, 00)); //(ANO), (MÊS), (DIA), (HORA), (MINUTOS), (SEGUNDOS)
+  }
+  delay(100); //INTERVALO DE 100 MILISSEGUNDOS
+
+  pinMode(2, OUTPUT); //Porta do LED verde
+  pinMode(3, OUTPUT); //Porta do LED vermelho
+  myservo.attach(5); // Servo motor na porta 5 Digital
+  pinMode(9, OUTPUT);
+
+  myservo.write(estadomotor);
+}
+
+void loop()
+{     
+    DateTime now = rtc.now(); //CHAMADA DE FUNÇÃO
+    Serial.print("Data: "); //IMPRIME O TEXTO NO MONITOR SERIAL
+    Serial.print(now.day(), DEC); //IMPRIME NO MONITOR SERIAL O DIA
+    Serial.print('/'); //IMPRIME O CARACTERE NO MONITOR SERIAL
+    Serial.print(now.month(), DEC); //IMPRIME NO MONITOR SERIAL O MÊS
+    Serial.print('/'); //IMPRIME O CARACTERE NO MONITOR SERIAL
+    Serial.print(now.year(), DEC); //IMPRIME NO MONITOR SERIAL O ANO
+    Serial.print(" / Dia: "); //IMPRIME O TEXTO NA SERIAL
+    Serial.print(daysOfTheWeek[now.dayOfTheWeek()]); //IMPRIME NO MONITOR SERIAL O DIA
+    Serial.print(" / Horas: "); //IMPRIME O TEXTO NA SERIAL
+    Serial.print(now.hour(), DEC); //IMPRIME NO MONITOR SERIAL A HORA
+    Serial.print(':'); //IMPRIME O CARACTERE NO MONITOR SERIAL
+    Serial.print(now.minute(), DEC); //IMPRIME NO MONITOR SERIAL OS MINUTOS
+    Serial.print(':'); //IMPRIME O CARACTERE NO MONITOR SERIAL
+    Serial.print(now.second(), DEC); //IMPRIME NO MONITOR SERIAL OS SEGUNDOS
+    Serial.println(); //QUEBRA DE LINHA NA SERIAL
+    delay(1000); //INTERVALO DE 1 SEGUNDO
+  
+  float cm = distanceSensor.measureDistanceCm();
+  
+  if (cm > 5) {
+    digitalWrite(3, HIGH);
+    Serial.println("Estou vazio e mandando sinal!");
+    digitalWrite (9, HIGH);
+  }
+  else if (cm <= 5) {
+    digitalWrite(3, LOW);
+    Serial.println("Estou cheio e não mando sinal!");
+    digitalWrite (9, LOW);
+  }
+
+  delay(100); // Wait for 100 millisecond(s)
+
+ if (now.second() > 58) // Configurar horario, minutos, secundos para que execute a função 
+ //if (now.hour() == 8 && now.minute() == 0 && now.second() == 1) 
+ { 
+  if (estadomotor> 44) Motor(0);    
+  else Motor(45);  
+ }
+}
